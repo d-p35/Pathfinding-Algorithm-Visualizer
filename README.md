@@ -1,4 +1,4 @@
-#Pathfinding Algotithm Visualizer
+# Pathfinding Algotithm Visualizer
 
  npm start
     Starts the development server.
