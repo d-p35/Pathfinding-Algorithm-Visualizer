@@ -1,1 +1,1 @@
-#Pathfinding Algotithm Visualizer
+# Pathfinding Algotithm Visualizer
