@@ -4,3 +4,11 @@
     outline: 1px solid black;
     display: inline-block;
 }
+
+.box-start {
+    background-color: green;
+}
+
+.box-finish {
+    background-color: red;
+}
