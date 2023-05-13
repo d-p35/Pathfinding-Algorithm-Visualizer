@@ -59,10 +59,26 @@ function PathfindingVisualizer() {
         // console.log(grid);
       }, []);
 
+      const animateDijkstra = (visitedNodesInOrder) => {
+        for (let i = 0; i < visitedNodesInOrder.length; i++) {
+          setTimeout(() => {
+             const newGrid = grid.slice();
+          const newnode = {
+            ...visitedNodesInOrder[i],
+            isVisited: true,
+          }
+          newGrid[visitedNodesInOrder[i].row][visitedNodesInOrder[i].col] = newnode;
+            setGrid(newGrid);
+          }, 100000000 * i);
+        }
+      }
 
-
-
-
+    const visualizeDijsktra = () => {
+        const startNode = grid[startRow][startCol];
+        const finishNode = grid[finishRow][finishCol];
+        const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+        animateDijkstra(visitedNodesInOrder)
+      }
 
 
 
