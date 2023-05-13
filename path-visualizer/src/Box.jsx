@@ -17,7 +17,7 @@ function Box(props) {
     
     return(
         <div className="box" style={{backgroundColor: props.color}}>
-    {console.log(props)}
+    {/* {console.log(props)} */}
         </div>
     );
 }

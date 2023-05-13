@@ -1,45 +1,57 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-
+import { dijkstra, getUnvisitedNeighbors } from "./Dijkstra";
 import "./PathfindingVisualizer.css";
 import Box from "./Box";
 
 function PathfindingVisualizer() {
 
+    const startCol = 1;
+    const startRow = 2;
+    const finishCol = 5;
+    const finishRow = 2;
+
     const [grid, setGrid] = useState([]);
 
-    const getInitialGrid = () => {
-        const grid = [];
-        for (let row = 0; row < 2; row++) {
-          const currentRow = [];
-          for (let col = 0; col < 2; col++) {
-            let currentNode = {
-              col,
-              row,
-              isStart: row === 1 && col === 1,
-              isFinish: row === 2 && col === 2,
-            }
-            currentRow.push(currentNode);
-          }
-          grid.push(currentRow);
-        }
-        return grid;
+    // const getInitialGrid = () => {
+    //     const grid = [];
+    //     for (let row = 0; row < 2; row++) {
+    //       const currentRow = [];
+    //       for (let col = 0; col < 2; col++) {
+    //         let currentNode = {
+    //           col,
+    //           row,
+    //           isStart: row === 1 && col === 1,
+    //           isFinish: row === 2 && col === 2,
+    //         }
+    //         currentRow.push(createNode(col, row));
+    //       }
+    //       grid.push(currentRow);
+    //     }
+    //     return grid;
+    //   }
+
+      const createNode = (col, row) => {
+        return {
+          col,
+          row,
+          isStart: row === startRow && col === startCol,
+          isFinish: row === finishRow && col === finishCol,
+          distance: Infinity,
+          isVisited: false,
+          isWall: false,
+          previousNode: null,
+        };
       }
     
 
     
-    useEffect(() => {
+      useEffect(() => {
         const grid = [];
         for (let row = 0; row < 10; row++) {
           const currentRow = [];
           for (let col = 0; col < 10; col++) {
-            let currentNode = {
-              col,
-              row,
-              isStart: row === 0 && col === 0,
-              isFinish: row === 9 && col === 9,
-            }
-            currentRow.push(currentNode);
+            currentRow.push(createNode(col, row));
           }
           grid.push(currentRow);
         }
@@ -47,7 +59,16 @@ function PathfindingVisualizer() {
         // console.log(grid);
       }, []);
 
+
+
+
+
+
+
+
     return (
+      <div>
+        <button onClick={() => console.log("Visualize Dijsktra")}>Visualize Dijsktra</button>
         <div className="grid">
             {
                 grid.map((row, rowIdx) => {
@@ -55,8 +76,8 @@ function PathfindingVisualizer() {
                   return(
                     <div key={rowIdx}>
                     {row.map((box, boxIdx) => {
-                      const {isFinish, isStart} = box;
-                      const color = isFinish ? "red" : isStart ? "green" : "";
+                      const {isFinish, isStart, isVisited} = box;
+                      const color = isFinish ? "red" : isStart ? "green" : isVisited ? "blue" : "";
                       return(
                     <Box
                       key={boxIdx}
@@ -69,6 +90,7 @@ function PathfindingVisualizer() {
                     </div>
                   );
             })}
+        </div>
         </div>
     );
 }
