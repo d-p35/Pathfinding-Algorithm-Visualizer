@@ -69,14 +69,26 @@ function PathfindingVisualizer() {
           }
           newGrid[visitedNodesInOrder[i].row][visitedNodesInOrder[i].col] = newnode;
             setGrid(newGrid);
-          }, 100000000 * i);
+          }, 1000 * i);
         }
       }
 
     const visualizeDijsktra = () => {
         const startNode = grid[startRow][startCol];
         const finishNode = grid[finishRow][finishCol];
-        const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+                let originalgrid = []
+        for (const row of grid) {
+          let currentRow = []
+          for (const node of row) {
+            currentRow.push(Object.assign({}, node));
+          }
+          originalgrid.push(currentRow);
+        }
+         const originalStartNode = originalgrid[startRow][startCol];
+         const originalFinishNode = originalgrid[finishRow][finishCol];
+
+        const visitedNodesInOrder = dijkstra(originalgrid, originalStartNode, originalFinishNode);
+        console.log(visitedNodesInOrder);
         animateDijkstra(visitedNodesInOrder)
       }
 
@@ -84,7 +96,7 @@ function PathfindingVisualizer() {
 
     return (
       <div>
-        <button onClick={() => console.log("Visualize Dijsktra")}>Visualize Dijsktra</button>
+        <button onClick={() => visualizeDijsktra()}>Visualize Dijsktra</button>
         <div className="grid">
             {
                 grid.map((row, rowIdx) => {
