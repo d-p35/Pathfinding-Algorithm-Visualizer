@@ -12,6 +12,7 @@ function PathfindingVisualizer() {
     const finishRow = 2;
 
     const [grid, setGrid] = useState([]);
+    const [mouseIsPressed, setMouseIsPressed] = useState(false);
 
     // const getInitialGrid = () => {
     //     const grid = [];
@@ -41,6 +42,8 @@ function PathfindingVisualizer() {
           isVisited: false,
           isWall: false,
           previousNode: null,
+          onShortestPath: false,
+
         };
       }
     
@@ -59,24 +62,60 @@ function PathfindingVisualizer() {
         // console.log(grid);
       }, []);
 
-      const animateDijkstra = (visitedNodesInOrder) => {
-        for (let i = 0; i < visitedNodesInOrder.length; i++) {
+      
+      const animateShortestPath = (nodesInShortestPathOrder) => {
+        for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
           setTimeout(() => {
+            const node = nodesInShortestPathOrder[i];
+            const newGrid = grid.slice();
+            const newNode = {
+              ...node,
+              onShortestPath: true,
+            }
+            newGrid[node.row][node.col] = newNode;
+            setGrid(newGrid);
+          }, 50* i);
+        }
+      }
+
+      const  animateDijkstra = (visitedNodesInOrder, shortestPath) => {
+        for (let i = 0; i <=visitedNodesInOrder.length; i++) {
+          
+          setTimeout(() => {
+            if (i === visitedNodesInOrder.length) {
+              animateShortestPath(shortestPath);
+              return;
+            }
+            // console.log("visited nodes");
              const newGrid = grid.slice();
           const newnode = {
             ...visitedNodesInOrder[i],
             isVisited: true,
           }
+          console.log(newnode);
           newGrid[visitedNodesInOrder[i].row][visitedNodesInOrder[i].col] = newnode;
             setGrid(newGrid);
-          }, 1000 * i);
+          }, 100 * i);
         }
+
+        
+
+
+
+      }
+
+      const getNodesInShortestPathOrder = (finishNode) => {
+        const nodesInShortestPathOrder = [];
+        let currentNode = finishNode;
+        while (currentNode !== null) {
+          nodesInShortestPathOrder.unshift(currentNode);
+          currentNode = currentNode.previousNode;
+        }
+        return nodesInShortestPathOrder;
       }
 
     const visualizeDijsktra = () => {
-        const startNode = grid[startRow][startCol];
-        const finishNode = grid[finishRow][finishCol];
-                let originalgrid = []
+        let originalgrid = []
         for (const row of grid) {
           let currentRow = []
           for (const node of row) {
@@ -84,13 +123,46 @@ function PathfindingVisualizer() {
           }
           originalgrid.push(currentRow);
         }
-         const originalStartNode = originalgrid[startRow][startCol];
-         const originalFinishNode = originalgrid[finishRow][finishCol];
+         const startNode = originalgrid[startRow][startCol];
+         const finishNode = originalgrid[finishRow][finishCol];
 
-        const visitedNodesInOrder = dijkstra(originalgrid, originalStartNode, originalFinishNode);
-        console.log(visitedNodesInOrder);
-        animateDijkstra(visitedNodesInOrder)
+        const visitedNodesInOrder = dijkstra(originalgrid, startNode, finishNode);
+        const shortestPath = getNodesInShortestPathOrder(finishNode);
+        // console.log(finishNode);
+        // console.log(visitedNodesInOrder);
+        console.log(shortestPath);
+        animateDijkstra(visitedNodesInOrder, shortestPath);
+        // animateShortestPath(shortestPath);
       }
+
+      const handleMouseDown = (row, col) => {
+        // console.log(row, col);
+        const newGrid = getNewGridWithWallToggled(grid, row, col);
+        setGrid(newGrid);
+        console.log(grid[row][col]);
+      };
+
+      const handleMouseEnter = (row, col) => {
+        if (!mouseIsPressed) return;
+        const newGrid = getNewGridWithWallToggled(grid, row, col);
+        setGrid(newGrid);
+      };
+
+      const handleMouseUp = () => {
+        setMouseIsPressed(false);
+      };
+
+      const getNewGridWithWallToggled = (grid, row, col) => {
+        // console.log(row, col, grid);
+        const newGrid = grid.slice();
+        const node = newGrid[row][col];
+        const newNode = {
+          ...node,
+          isWall: !node.isWall,
+        };
+        newGrid[row][col] = newNode;
+        return newGrid;
+      };
 
 
 
@@ -104,14 +176,21 @@ function PathfindingVisualizer() {
                   return(
                     <div key={rowIdx}>
                     {row.map((box, boxIdx) => {
-                      const {isFinish, isStart, isVisited} = box;
-                      const color = isFinish ? "red" : isStart ? "green" : isVisited ? "blue" : "";
+                      const {isFinish, isStart, isVisited, onShortestPath, isWall} = box;
+                      const color = onShortestPath ? "yellow" : isWall ? "black" : isFinish ?  "red" : isStart ? "green" : isVisited ? "blue" : "";
                       return(
                     <Box
                       key={boxIdx}
                       color={color}
                       isStart={isStart}
                       isFinish={isFinish}
+                      onMouseDown={(row, col) => handleMouseDown(row, col)}
+                      onMouseEnter={(row, col) => handleMouseEnter(row, col)}
+                      onMouseUp={() => handleMouseUp()}
+                      row={rowIdx}
+                      col={boxIdx}
+
+
                     />
                       );
                 })}

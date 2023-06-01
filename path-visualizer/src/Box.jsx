@@ -8,6 +8,17 @@ function Box(props) {
 
     const [classNameForColor, setClassNameForColor] = useState(props.isFinish ? "box-finish" : props.isStart ? "box-start" : "");
 
+    const {
+        col,
+        row,
+        isFinish,
+        isStart,
+        isWall,
+        onMouseDown,
+        onMouseEnter,
+        onMouseUp,
+    } = props;
+    
     // let classNameForColor = "";
     // useEffect(() => {
         
@@ -16,7 +27,13 @@ function Box(props) {
 
     
     return(
-        <div className="box" style={{backgroundColor: props.color}}>
+        <div 
+        id={`box-${row}-${col}`}
+        className="box" style={{backgroundColor: props.color}}
+        onMouseDown={() => onMouseDown(row, col)}
+        onMouseEnter={() => onMouseEnter(row, col)}
+        onMouseUp={() => onMouseUp()}
+        >
     {/* {console.log(props)} */}
         </div>
     );
