@@ -49,4 +49,4 @@ function getUnvisitedNeighbors(node, grid){
     return neighbors.filter(neighbor => !neighbor.isVisited);
 }
 
-export {dijkstra, getUnvisitedNeighbors};
+export {dijkstra};

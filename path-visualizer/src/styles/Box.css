@@ -1,7 +1,7 @@
 .box{
     width: 20px;
     height: 20px;
-    outline: 1px solid black;
+    outline: 1px solid darkblue;
     display: inline-block;
 }
 

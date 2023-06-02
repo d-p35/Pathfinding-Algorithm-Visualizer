@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { dijkstra, getUnvisitedNeighbors } from "./Dijkstra";
-import "./PathfindingVisualizer.css";
+import { dijkstra } from "../algorithms/Dijkstra";
+import "../styles/PathfindingVisualizer.css";
 import Box from "./Box";
+import { Button } from "@mui/material";
 
 function PathfindingVisualizer() {
 
@@ -51,9 +52,9 @@ function PathfindingVisualizer() {
     
       useEffect(() => {
         const grid = [];
-        for (let row = 0; row < 10; row++) {
+        for (let row = 0; row < 20; row++) {
           const currentRow = [];
-          for (let col = 0; col < 10; col++) {
+          for (let col = 0; col < 50; col++) {
             currentRow.push(createNode(col, row));
           }
           grid.push(currentRow);
@@ -139,7 +140,8 @@ function PathfindingVisualizer() {
         // console.log(row, col);
         const newGrid = getNewGridWithWallToggled(grid, row, col);
         setGrid(newGrid);
-        console.log(grid[row][col]);
+        setMouseIsPressed(true);
+        // console.log(grid[row][col]);
       };
 
       const handleMouseEnter = (row, col) => {
@@ -168,7 +170,7 @@ function PathfindingVisualizer() {
 
     return (
       <div>
-        <button onClick={() => visualizeDijsktra()}>Visualize Dijsktra</button>
+        <Button onClick={() => visualizeDijsktra()}>Visualize Dijsktra</Button>
         <div className="grid">
             {
                 grid.map((row, rowIdx) => {
@@ -177,7 +179,7 @@ function PathfindingVisualizer() {
                     <div key={rowIdx}>
                     {row.map((box, boxIdx) => {
                       const {isFinish, isStart, isVisited, onShortestPath, isWall} = box;
-                      const color = onShortestPath ? "yellow" : isWall ? "black" : isFinish ?  "red" : isStart ? "green" : isVisited ? "blue" : "";
+                      const color = onShortestPath ? "yellow"  : isFinish ?  "red" : isStart ? "green" : isVisited ? "mediumslateblue" : isWall ? "black" : "";
                       return(
                     <Box
                       key={boxIdx}
